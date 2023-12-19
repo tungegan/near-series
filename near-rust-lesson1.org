@@ -1,0 +1,189 @@
+#+TITLE: LẬP TRÌNH SMART CONTRACT TRÊN NEAR
+#+DESCRIPTION: Tài liệu này giúp bạn có cái nhìn tổng quan về lập trình smart contract. Cài đặt và bắt đầu lập trình smart contract trên Near
+#+AUTHOR: Mai Xuan Tung
+#+EMAIL: mxt.tung@gmail.com
+#+SETUPFILE: ~/theme-readtheorg.setup
+#+HTML_HEAD: <style>pre.src{background:#343131;color:white;} </style>
+#+EXPORT_FILE_NAME: near-rust-lesson1.html
+
+#+begin_quote
++ Github: https://github.com/tungegan
++ mail: mxt.tung@gmail.com
++ Live coding và thảo luận 19h30 thứ 3 hàng tuần tại [[https://discord.gg/Qq9eYFxjm5][NEAR Developers Vietnam]]
++ Video xem lại tại: [[https://www.youtube.com/@VBIAcademy][VBI Academy]]
++ Tham gia discord của VBI để cập nhật liên tục những thông tin về lập trình blockchain tại: [[https://discord.gg/XZ2DPQB88R][VBI Academy]]
+#+end_quote
+
+* Nội dung
++ Tổng quan công nghệ blockchain:
+  1. Blockcchain là gì? Tính chất của blockchain.
+  2. Một số hướng lập trình trong blockchain.
+
++ Lập trình smart contract:
+  1. Lập trình smart contract là gì và ý nghĩa của chúng.
+  2. Lập trình smart contract khác gì so với lập trình truyền thống?
+
++ Cài đặt môi trường lập trình với smart contract với Near:
+  1. Cài đặt Rust.
+  2. Cài đặt Near CLI, Cargo Near.
+  3. Tương tác với smart contract trên Near.
+
+* Tổng quan công nghệ blockchain
+#+begin_quote
+Lý thuyết toán học và nền tảng Blockchain cơ bản - Mathematical Model and Blockchain Fundamental [[https://www.youtube.com/watch?v=aYv-Oh-YYyg][Click]]
+#+end_quote
+** Tính chất của blockchain
++ Phi tập trung
++ Minh bạch (bất biến, bảo mật, ...)
+
+** Một số hướng lập trình trong blockchain
++ Lập trình blockchain
++ Lập trình smart contract
+
+* Lập trình smart contract
+** Lập trình smart contract là gì và ý nghĩa của chúng?
++ Lập trình là gì?
+[[./1.png]]
+[[./compiler.png]]
+[[./2.png]]
++ Smart contract là gì?
+[[./3.png]]
+
+** Lập trình smart contract khác gì với lập trình truyền thống
++ Lập trình tryền thống
+#+begin_src rust
+  // Define the contract structure
+  #[derive(Debug)]
+  pub struct Contract {
+    message: String,
+  }
+
+  // Define the default, which automatically initializes the contract
+  impl Default for Contract {
+    fn default() -> Self {
+      Self { message: "Hello friends".to_string() }
+    }
+  }
+
+  // Implement the contract structure
+  impl Contract {
+    // get the message
+    pub fn get_message(&self) -> String {
+      self.message.clone()
+    }
+
+    // Call this method to change the message
+    pub fn set_message(&mut self, new_message: String) {
+      self.message = new_message;
+    }
+  }
+
+  fn main() {
+    // init value
+    let mut new_contract: Contract = Contract::default();
+    println!("{:?}", new_contract);
+
+    // Change value
+    new_contract.set_message("Wellcome to Vietnam".to_string());
+    println!("{:?}", new_contract);
+  }
+#+end_src
+
++ Lập trình smart contract
+#+begin_src rust
+  use near_sdk::borsh::{BorshDeserialize, BorshSerialize};
+  use near_sdk::near_bindgen;
+
+  // Define the contract structure
+  #[near_bindgen]
+  #[derive(BorshDeserialize, BorshSerialize)]
+  #[borsh(crate = "near_sdk::borsh")]
+  pub struct Contract {
+    message: String,
+  }
+
+  // Define the default, which automatically initializes the contract
+  impl Default for Contract {
+    fn default() -> Self {
+      Self { message: "Hello friends".to_string() }
+    }
+  }
+
+  // Implement the contract structure
+  #[near_bindgen]
+  impl Contract {
+    // get the message
+    pub fn get_message(&self) -> String {
+      self.message.clone()
+    }
+
+    // Call this method to change the message b
+    pub fn set_message(&mut self, new_message: String) {
+      self.message = new_message;
+    }
+  }
+#+end_src
+
+* Cài đặt môi trường lập trình với smart contract với Near
+** Cài đặt Rust
++ Linux/MacOs
+#+begin_src
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
+
++ Window: Hướng dẫn cài đặt môi trường lập trình Rust. Youtube VBI Academy [[https://www.youtube.com/watch?v=FgIr4CW6G9g][click]]
+
+** Cài đặt Near CLI
++ Linux/MacOs
+  + cài đặt npm và node theo distro [[https://nodejs.org/en/download/package-manager/][click]]
+  #+begin_src
+    npm install -g near-cli
+  #+end_src
++ Window
+  + [[https://learn.microsoft.com/en-us/windows/wsl/install-manual][Cài đặt WSL]]
+  + [[https://docs.npmjs.com/getting-started][Cài đặt npm]]
+  + [[https://nodejs.org/en/download/package-manager/][Cài đặt Node.js]]
+  + Thay đổi npm directory mặc định.Tránh vến đề về quyền với WSL [[https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally#manually-change-npms-default-directory][Click]]
+  + Mở WSL và chạy lệnh
+    #+begin_src
+      npm install -g near-cli
+    #+end_src
+
+** Cài đặt cargo-near
+#+begin_src
+cargo install cargo-near
+#+end_src
+
+** Tương tác với NEAR smart contract
+#+begin_src
+cargo near --help
+#+end_src
+
++ Tạo tài khoản Near
+  #+begin_src
+    cargo near create-dev-account
+  #+end_src
+
++ Khởi tạo dự án mới
+  #+begin_src
+    cargo near new
+  #+end_src
+
++ Deloy contract
+  #+begin_src
+    cargo near deploy
+  #+end_src
+
++ Function call
+  #+begin_src
+    near call --help
+  #+end_src
+
+  #+begin_src
+    near call <contractName> <methodName> [args]
+  #+end_src
+
+* Tài liệu Rust
+#+begin_quote
+[[https://www.youtube.com/watch?v=XiS7MB23NoE&list=PLFnEYduGTiXE2ejxmzTIraP2feI-pmeuw][Ngôn Ngữ Lập Trình Rust - Cơ Bản]]
+#+end_quote

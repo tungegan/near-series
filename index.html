@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-12-19 Tue 16:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LẬP TRÌNH SMART CONTRACT TRÊN NEAR</title>
+<meta name="author" content="Mai Xuan Tung" />
+<meta name="description" content="Tài liệu này giúp bạn có cái nhìn tổng quan về lập trình smart contract. Cài đặt và bắt đầu lập trình smart contract trên Near" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<style>pre.src{background:#343131;color:white;} </style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">LẬP TRÌNH SMART CONTRACT TRÊN NEAR</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc5e60aa">1. Nội dung</a></li>
+<li><a href="#orgb46e31f">2. Tổng quan công nghệ blockchain</a>
+<ul>
+<li><a href="#org8298a4f">2.1. Tính chất của blockchain</a></li>
+<li><a href="#orgb63299b">2.2. Một số hướng lập trình trong blockchain</a></li>
+</ul>
+</li>
+<li><a href="#org4f7e1c3">3. Lập trình smart contract</a>
+<ul>
+<li><a href="#orge7a14df">3.1. Lập trình smart contract là gì và ý nghĩa của chúng?</a></li>
+<li><a href="#orgba39198">3.2. Lập trình smart contract khác gì với lập trình truyền thống</a></li>
+</ul>
+</li>
+<li><a href="#orga3c8c8e">4. Cài đặt môi trường lập trình với smart contract với Near</a>
+<ul>
+<li><a href="#orge5da3f0">4.1. Cài đặt Rust</a></li>
+<li><a href="#org28b827b">4.2. Cài đặt Near CLI</a></li>
+<li><a href="#orgbe51cc5">4.3. Cài đặt cargo-near</a></li>
+<li><a href="#org51c19e3">4.4. Tương tác với NEAR smart contract</a></li>
+</ul>
+</li>
+<li><a href="#org238f365">5. Tài liệu Rust</a></li>
+</ul>
+</div>
+</div>
+<blockquote>
+<ul class="org-ul">
+<li>Github: <a href="https://github.com/tungegan">https://github.com/tungegan</a></li>
+<li>mail: mxt.tung@gmail.com</li>
+<li>Live coding và thảo luận 19h30 thứ 3 hàng tuần tại <a href="https://discord.gg/Qq9eYFxjm5">NEAR Developers Vietnam</a></li>
+<li>Video xem lại tại: <a href="https://www.youtube.com/@VBIAcademy">VBI Academy</a></li>
+<li>Tham gia discord của VBI để cập nhật liên tục những thông tin về lập trình blockchain tại: <a href="https://discord.gg/XZ2DPQB88R">VBI Academy</a></li>
+</ul>
+</blockquote>
+
+<div id="outline-container-orgc5e60aa" class="outline-2">
+<h2 id="orgc5e60aa"><span class="section-number-2">1.</span> Nội dung</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Tổng quan công nghệ blockchain:
+<ol class="org-ol">
+<li>Blockcchain là gì? Tính chất của blockchain.</li>
+<li>Một số hướng lập trình trong blockchain.</li>
+</ol></li>
+
+<li>Lập trình smart contract:
+<ol class="org-ol">
+<li>Lập trình smart contract là gì và ý nghĩa của chúng.</li>
+<li>Lập trình smart contract khác gì so với lập trình truyền thống?</li>
+</ol></li>
+
+<li>Cài đặt môi trường lập trình với smart contract với Near:
+<ol class="org-ol">
+<li>Cài đặt Rust.</li>
+<li>Cài đặt Near CLI, Cargo Near.</li>
+<li>Tương tác với smart contract trên Near.</li>
+</ol></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb46e31f" class="outline-2">
+<h2 id="orgb46e31f"><span class="section-number-2">2.</span> Tổng quan công nghệ blockchain</h2>
+<div class="outline-text-2" id="text-2">
+<blockquote>
+<p>
+Lý thuyết toán học và nền tảng Blockchain cơ bản - Mathematical Model and Blockchain Fundamental <a href="https://www.youtube.com/watch?v=aYv-Oh-YYyg">Click</a>
+</p>
+</blockquote>
+</div>
+<div id="outline-container-org8298a4f" class="outline-3">
+<h3 id="org8298a4f"><span class="section-number-3">2.1.</span> Tính chất của blockchain</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>Phi tập trung</li>
+<li>Minh bạch (bất biến, bảo mật, &#x2026;)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb63299b" class="outline-3">
+<h3 id="orgb63299b"><span class="section-number-3">2.2.</span> Một số hướng lập trình trong blockchain</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>Lập trình blockchain</li>
+<li>Lập trình smart contract</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4f7e1c3" class="outline-2">
+<h2 id="org4f7e1c3"><span class="section-number-2">3.</span> Lập trình smart contract</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orge7a14df" class="outline-3">
+<h3 id="orge7a14df"><span class="section-number-3">3.1.</span> Lập trình smart contract là gì và ý nghĩa của chúng?</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>Lập trình là gì?</li>
+</ul>
+<p>
+<img src="./1.png" alt="1.png" />
+<img src="./compiler.png" alt="compiler.png" />
+<img src="./2.png" alt="2.png" />
+</p>
+<ul class="org-ul">
+<li>Smart contract là gì?</li>
+</ul>
+
+<div id="org71e3f74" class="figure">
+<p><img src="./3.png" alt="3.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba39198" class="outline-3">
+<h3 id="orgba39198"><span class="section-number-3">3.2.</span> Lập trình smart contract khác gì với lập trình truyền thống</h3>
+<div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>Lập trình tryền thống</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-rust">  <span style="color: #51587a;">// Define the contract structure</span>
+  <span style="color: #7dcfff; font-weight: bold;">#</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">[</span><span style="color: #7dcfff; font-weight: bold;">derive</span><span style="color: #7aa2f7; background-color: #1a1b26; font-weight: bold;">(</span><span style="color: #c0caf5; font-weight: bold;">Debug</span><span style="color: #7aa2f7; background-color: #1a1b26; font-weight: bold;">)</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">]</span>
+  <span style="color: #bb9af7;">pub</span> <span style="color: #bb9af7;">struct</span> <span style="color: #c0caf5;">Contract</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #c0caf5; font-style: italic;">message</span>: <span style="color: #c0caf5;">String</span>,
+  <span style="color: #a9b1d6;">}</span>
+
+  <span style="color: #51587a;">// Define the default, which automatically initializes the contract</span>
+  <span style="color: #bb9af7;">impl</span> <span style="color: #c0caf5;">Default</span> <span style="color: #bb9af7;">for</span> <span style="color: #c0caf5;">Contract</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">default</span><span style="color: #7aa2f7; background-color: #1a1b26;">()</span> -&gt; <span style="color: #bb9af7;">Self</span> <span style="color: #7aa2f7;">{</span>
+      <span style="color: #bb9af7;">Self</span> <span style="color: #ff9e64;">{</span> <span style="color: #ff9e64; font-style: italic;">message</span>: <span style="color: #9ece6a;">"Hello friends"</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #b4f9f8; font-weight: bold; font-style: italic;">to_string</span><span style="color: #73daca; background-color: #1a1b26;">()</span> <span style="color: #ff9e64;">}</span>
+    <span style="color: #7aa2f7;">}</span>
+  <span style="color: #a9b1d6;">}</span>
+
+  <span style="color: #51587a;">// Implement the contract structure</span>
+  <span style="color: #bb9af7;">impl</span> <span style="color: #c0caf5;">Contract</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #51587a;">// get the message</span>
+    <span style="color: #bb9af7;">pub</span> <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">get_message</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #bb9af7;">&amp;</span><span style="color: #bb9af7;">self</span><span style="color: #7aa2f7; background-color: #1a1b26;">)</span> -&gt; <span style="color: #c0caf5;">String</span> <span style="color: #7aa2f7;">{</span>
+      <span style="color: #bb9af7;">self</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #ff9e64; font-style: italic;">message</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #b4f9f8; font-weight: bold; font-style: italic;">clone</span><span style="color: #ff9e64; background-color: #1a1b26;">()</span>
+    <span style="color: #7aa2f7;">}</span>
+
+    <span style="color: #51587a;">// Call this method to change the message</span>
+    <span style="color: #bb9af7;">pub</span> <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">set_message</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #bb9af7;">&amp;</span><span style="color: #bb9af7;">mut</span> <span style="color: #bb9af7;">self</span>, <span style="color: #c0caf5;">new_message</span>: <span style="color: #c0caf5;">String</span><span style="color: #7aa2f7; background-color: #1a1b26;">)</span> <span style="color: #7aa2f7;">{</span>
+      <span style="color: #bb9af7;">self</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #ff9e64; font-style: italic;">message</span> <span style="color: #bb9af7;">=</span> new_message<span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+    <span style="color: #7aa2f7;">}</span>
+  <span style="color: #a9b1d6;">}</span>
+
+  <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">main</span><span style="color: #a9b1d6; background-color: #1a1b26;">()</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #51587a;">// init value</span>
+    <span style="color: #bb9af7;">let</span> <span style="color: #bb9af7;">mut</span> <span style="color: #c0caf5;">new_contract</span>: <span style="color: #c0caf5;">Contract</span> <span style="color: #bb9af7;">=</span> <span style="color: #c0caf5;">Contract</span><span style="color: #a9b1d6; background-color: #1a1b26;">::</span><span style="color: #b4f9f8; font-weight: bold;">default</span><span style="color: #7aa2f7; background-color: #1a1b26;">()</span><span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+    <span style="color: #7dcfff; font-weight: bold;">println!</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #9ece6a;">"{:?}"</span>, new_contract<span style="color: #7aa2f7; background-color: #1a1b26;">)</span><span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+
+    <span style="color: #51587a;">// Change value</span>
+    new_contract<span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #b4f9f8; font-weight: bold; font-style: italic;">set_message</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #9ece6a;">"Wellcome to Vietnam"</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #b4f9f8; font-weight: bold; font-style: italic;">to_string</span><span style="color: #ff9e64; background-color: #1a1b26;">()</span><span style="color: #7aa2f7; background-color: #1a1b26;">)</span><span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+    <span style="color: #7dcfff; font-weight: bold;">println!</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #9ece6a;">"{:?}"</span>, new_contract<span style="color: #7aa2f7; background-color: #1a1b26;">)</span><span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+  <span style="color: #a9b1d6;">}</span>
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Lập trình smart contract</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-rust">  <span style="color: #bb9af7;">use</span> <span style="color: #ff9e64;">near_sdk</span><span style="color: #a9b1d6; background-color: #1a1b26;">::</span><span style="color: #ff9e64;">borsh</span><span style="color: #a9b1d6; background-color: #1a1b26;">::</span><span style="color: #a9b1d6;">{</span><span style="color: #c0caf5;">BorshDeserialize</span>, <span style="color: #c0caf5;">BorshSerialize</span><span style="color: #a9b1d6;">}</span><span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+  <span style="color: #bb9af7;">use</span> <span style="color: #ff9e64;">near_sdk</span><span style="color: #a9b1d6; background-color: #1a1b26;">::</span>near_bindgen<span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+
+  <span style="color: #51587a;">// Define the contract structure</span>
+  <span style="color: #7dcfff; font-weight: bold;">#</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">[</span><span style="color: #7dcfff; font-weight: bold;">near_bindgen</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">]</span>
+  <span style="color: #7dcfff; font-weight: bold;">#</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">[</span><span style="color: #7dcfff; font-weight: bold;">derive</span><span style="color: #7aa2f7; background-color: #1a1b26; font-weight: bold;">(</span><span style="color: #c0caf5; font-weight: bold;">BorshDeserialize</span><span style="color: #7dcfff; font-weight: bold;">, </span><span style="color: #c0caf5; font-weight: bold;">BorshSerialize</span><span style="color: #7aa2f7; background-color: #1a1b26; font-weight: bold;">)</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">]</span>
+  <span style="color: #7dcfff; font-weight: bold;">#</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">[</span><span style="color: #7dcfff; font-weight: bold;">borsh</span><span style="color: #7aa2f7; background-color: #1a1b26; font-weight: bold;">(</span><span style="color: #bb9af7; font-weight: bold;">crate</span><span style="color: #7dcfff; font-weight: bold;"> </span><span style="color: #7dcfff; font-weight: bold;">=</span><span style="color: #7dcfff; font-weight: bold;"> </span><span style="color: #9ece6a; font-weight: bold;">"near_sdk::borsh"</span><span style="color: #7aa2f7; background-color: #1a1b26; font-weight: bold;">)</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">]</span>
+  <span style="color: #bb9af7;">pub</span> <span style="color: #bb9af7;">struct</span> <span style="color: #c0caf5;">Contract</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #c0caf5; font-style: italic;">message</span>: <span style="color: #c0caf5;">String</span>,
+  <span style="color: #a9b1d6;">}</span>
+
+  <span style="color: #51587a;">// Define the default, which automatically initializes the contract</span>
+  <span style="color: #bb9af7;">impl</span> <span style="color: #c0caf5;">Default</span> <span style="color: #bb9af7;">for</span> <span style="color: #c0caf5;">Contract</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">default</span><span style="color: #7aa2f7; background-color: #1a1b26;">()</span> -&gt; <span style="color: #bb9af7;">Self</span> <span style="color: #7aa2f7;">{</span>
+      <span style="color: #bb9af7;">Self</span> <span style="color: #ff9e64;">{</span> <span style="color: #ff9e64; font-style: italic;">message</span>: <span style="color: #9ece6a;">"Hello friends"</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #b4f9f8; font-weight: bold; font-style: italic;">to_string</span><span style="color: #73daca; background-color: #1a1b26;">()</span> <span style="color: #ff9e64;">}</span>
+    <span style="color: #7aa2f7;">}</span>
+  <span style="color: #a9b1d6;">}</span>
+
+  <span style="color: #51587a;">// Implement the contract structure</span>
+  <span style="color: #7dcfff; font-weight: bold;">#</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">[</span><span style="color: #7dcfff; font-weight: bold;">near_bindgen</span><span style="color: #a9b1d6; background-color: #1a1b26; font-weight: bold;">]</span>
+  <span style="color: #bb9af7;">impl</span> <span style="color: #c0caf5;">Contract</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #51587a;">// get the message</span>
+    <span style="color: #bb9af7;">pub</span> <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">get_message</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #bb9af7;">&amp;</span><span style="color: #bb9af7;">self</span><span style="color: #7aa2f7; background-color: #1a1b26;">)</span> -&gt; <span style="color: #c0caf5;">String</span> <span style="color: #7aa2f7;">{</span>
+      <span style="color: #bb9af7;">self</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #ff9e64; font-style: italic;">message</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #b4f9f8; font-weight: bold; font-style: italic;">clone</span><span style="color: #ff9e64; background-color: #1a1b26;">()</span>
+    <span style="color: #7aa2f7;">}</span>
+
+    <span style="color: #51587a;">// Call this method to change the message b</span>
+    <span style="color: #bb9af7;">pub</span> <span style="color: #bb9af7;">fn</span> <span style="color: #7aa2f7;">set_message</span><span style="color: #7aa2f7; background-color: #1a1b26;">(</span><span style="color: #bb9af7;">&amp;</span><span style="color: #bb9af7;">mut</span> <span style="color: #bb9af7;">self</span>, <span style="color: #c0caf5;">new_message</span>: <span style="color: #c0caf5;">String</span><span style="color: #7aa2f7; background-color: #1a1b26;">)</span> <span style="color: #7aa2f7;">{</span>
+      <span style="color: #bb9af7;">self</span><span style="color: #a9b1d6; background-color: #1a1b26;">.</span><span style="color: #ff9e64; font-style: italic;">message</span> <span style="color: #bb9af7;">=</span> new_message<span style="color: #a9b1d6; background-color: #1a1b26;">;</span>
+    <span style="color: #7aa2f7;">}</span>
+  <span style="color: #a9b1d6;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga3c8c8e" class="outline-2">
+<h2 id="orga3c8c8e"><span class="section-number-2">4.</span> Cài đặt môi trường lập trình với smart contract với Near</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orge5da3f0" class="outline-3">
+<h3 id="orge5da3f0"><span class="section-number-3">4.1.</span> Cài đặt Rust</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li>Linux/MacOs</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-nil">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Window: Hướng dẫn cài đặt môi trường lập trình Rust. Youtube VBI Academy <a href="https://www.youtube.com/watch?v=FgIr4CW6G9g">click</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org28b827b" class="outline-3">
+<h3 id="org28b827b"><span class="section-number-3">4.2.</span> Cài đặt Near CLI</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li><p>
+Linux/MacOs
+</p>
+<ul class="org-ul">
+<li>cài đặt npm và node theo distro <a href="https://nodejs.org/en/download/package-manager/">click</a></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-nil">    npm install -g near-cli
+</pre>
+</div></li>
+<li>Window
+<ul class="org-ul">
+<li><a href="https://learn.microsoft.com/en-us/windows/wsl/install-manual">Cài đặt WSL</a></li>
+<li><a href="https://docs.npmjs.com/getting-started">Cài đặt npm</a></li>
+<li><a href="https://nodejs.org/en/download/package-manager/">Cài đặt Node.js</a></li>
+<li>Thay đổi npm directory mặc định.Tránh vến đề về quyền với WSL <a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally#manually-change-npms-default-directory">Click</a></li>
+<li><p>
+Mở WSL và chạy lệnh
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">      npm install -g near-cli
+</pre>
+</div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbe51cc5" class="outline-3">
+<h3 id="orgbe51cc5"><span class="section-number-3">4.3.</span> Cài đặt cargo-near</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-nil">cargo install cargo-near
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org51c19e3" class="outline-3">
+<h3 id="org51c19e3"><span class="section-number-3">4.4.</span> Tương tác với NEAR smart contract</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-nil">cargo near --help
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><p>
+Tạo tài khoản Near
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">    cargo near create-dev-account
+</pre>
+</div></li>
+
+<li><p>
+Khởi tạo dự án mới
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">    cargo near new
+</pre>
+</div></li>
+
+<li><p>
+Deloy contract
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">    cargo near deploy
+</pre>
+</div></li>
+
+<li><p>
+Function call
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">    near call --help
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">    near call &lt;contractName&gt; &lt;methodName&gt; [args]
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org238f365" class="outline-2">
+<h2 id="org238f365"><span class="section-number-2">5.</span> Tài liệu Rust</h2>
+<div class="outline-text-2" id="text-5">
+<blockquote>
+<p>
+<a href="https://www.youtube.com/watch?v=XiS7MB23NoE&amp;list=PLFnEYduGTiXE2ejxmzTIraP2feI-pmeuw">Ngôn Ngữ Lập Trình Rust - Cơ Bản</a>
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Mai Xuan Tung</p>
+<p class="date">Created: 2023-12-19 Tue 16:27</p>
+</div>
+</body>
+</html>
